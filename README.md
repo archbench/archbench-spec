@@ -9,15 +9,17 @@ Source of truth for the DSL contracts shared across the engine, frontend, and co
 | `schema/archbench.v0.json` | Legacy draft with only names/nodes/edges. |
 | `schema/archbench.v1.json` | Adds workload targets, node performance knobs, and database config support. |
 
-## Examples
+## Examples & Briefs
 
-Sample scenarios that must always validate against the latest schema live in `examples/`.
+Sample scenarios that must always validate against the latest schema live in `examples/`, while the narrative briefs live under `docs/scenarios/`.
 
-| Scenario | File |
-| --- | --- |
-| URL Shortener | `examples/url-shortener.json` |
-| Chat DM | `examples/chat-dm.json` |
-| Checkout | `examples/checkout.json` |
+| Scenario | JSON | Brief |
+| --- | --- | --- |
+| URL Shortener | `examples/url-shortener.json` | `docs/scenarios/url-shortener.md` |
+| Chat DM | `examples/chat-dm.json` | `docs/scenarios/chat-dm.md` |
+| Checkout | `examples/checkout.json` | `docs/scenarios/checkout.md` |
+
+See `docs/workloads.md` for a consolidated table of latency/RPS targets.
 
 ## Validation CLI
 
