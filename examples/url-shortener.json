@@ -1,0 +1,38 @@
+{
+  "name": "url-shortener",
+  "workload": {
+    "rps": 1800,
+    "p95TargetMs": 150
+  },
+  "nodes": [
+    { "id": "client", "type": "client", "latencyMs": 2, "capacityRps": 50000 },
+    { "id": "api", "type": "service", "latencyMs": 12, "capacityRps": 4000, "failureRate": 0.01, "costPerHour": 0.12 },
+    { "id": "cache", "type": "cache", "latencyMs": 1, "capacityRps": 60000, "failureRate": 0.002 },
+    {
+      "id": "db",
+      "type": "database",
+      "latencyMs": 14,
+      "capacityRps": 1800,
+      "dbConfig": {
+        "engine": "postgres",
+        "tables": [
+          {
+            "name": "urls",
+            "sizeClass": "M",
+            "indexes": ["idx_short_code"],
+            "columns": [
+              { "name": "short_code", "type": "string" },
+              { "name": "target_url", "type": "string" },
+              { "name": "created_at", "type": "number" }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    { "from": "client", "to": "api" },
+    { "from": "api", "to": "cache" },
+    { "from": "api", "to": "db" }
+  ]
+}

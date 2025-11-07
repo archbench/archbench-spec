@@ -1,0 +1,40 @@
+{
+  "name": "chat-dm",
+  "workload": {
+    "rps": 2500,
+    "p95TargetMs": 120
+  },
+  "nodes": [
+    { "id": "client", "type": "client" },
+    { "id": "gateway", "type": "gateway", "latencyMs": 6, "capacityRps": 5000, "failureRate": 0.004 },
+    { "id": "queue", "type": "queue", "latencyMs": 3, "capacityRps": 12000 },
+    { "id": "worker", "type": "worker", "latencyMs": 10, "capacityRps": 4000, "failureRate": 0.006 },
+    {
+      "id": "store",
+      "type": "database",
+      "latencyMs": 16,
+      "capacityRps": 2200,
+      "dbConfig": {
+        "engine": "mongo",
+        "tables": [
+          {
+            "name": "messages",
+            "sizeClass": "L",
+            "indexes": ["idx_user_pair", "idx_created_at"],
+            "columns": [
+              { "name": "user_pair", "type": "string" },
+              { "name": "payload", "type": "json" },
+              { "name": "created_at", "type": "number" }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    { "from": "client", "to": "gateway" },
+    { "from": "gateway", "to": "queue" },
+    { "from": "queue", "to": "worker" },
+    { "from": "worker", "to": "store" }
+  ]
+}

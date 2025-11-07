@@ -1,0 +1,50 @@
+{
+  "name": "checkout",
+  "workload": {
+    "rps": 900,
+    "p95TargetMs": 200
+  },
+  "nodes": [
+    { "id": "client", "type": "client" },
+    { "id": "api", "type": "service", "latencyMs": 18, "capacityRps": 2500, "failureRate": 0.007 },
+    { "id": "payments", "type": "service", "latencyMs": 22, "capacityRps": 1500, "failureRate": 0.012 },
+    { "id": "cache", "type": "cache", "latencyMs": 2, "capacityRps": 45000 },
+    {
+      "id": "orders-db",
+      "type": "database",
+      "latencyMs": 20,
+      "capacityRps": 1200,
+      "dbConfig": {
+        "engine": "mysql",
+        "tables": [
+          {
+            "name": "orders",
+            "sizeClass": "M",
+            "indexes": ["idx_user_id"],
+            "columns": [
+              { "name": "id", "type": "string" },
+              { "name": "user_id", "type": "string" },
+              { "name": "status", "type": "string" },
+              { "name": "total", "type": "number" }
+            ]
+          },
+          {
+            "name": "payments",
+            "sizeClass": "S",
+            "columns": [
+              { "name": "payment_id", "type": "string" },
+              { "name": "order_id", "type": "string" },
+              { "name": "provider", "type": "string" }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    { "from": "client", "to": "api" },
+    { "from": "api", "to": "payments" },
+    { "from": "api", "to": "cache" },
+    { "from": "api", "to": "orders-db" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "archbench-spec",
+  "version": "1.0.0",
+  "description": "Specification and DSL schema for ArchBench",
+  "main": "index.js",
+  "scripts": {
+    "validate": "ajv validate --spec=draft2020 -s schema/archbench.v1.json -d \"examples/*.json\" --strict=false",
+    "test": "npm run validate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archbench/archbench-spec.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archbench/archbench-spec/issues"
+  },
+  "homepage": "https://github.com/archbench/archbench-spec#readme",
+  "devDependencies": {
+    "ajv-cli": "^5.0.0"
+  }
+}

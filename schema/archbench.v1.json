@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ArchBench Scenario v1",
+  "type": "object",
+  "required": ["name", "nodes", "edges"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "p95TargetMs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["id", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "client",
+            "service",
+            "cache",
+            "database",
+            "queue",
+            "gateway",
+            "cdn",
+            "objectstore",
+            "search",
+            "stream",
+            "lb",
+            "worker"
+          ]
+        },
+        "latencyMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "varianceFactor": {
+          "type": "number",
+          "minimum": 0
+        },
+        "capacityRps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failureRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "costPerHour": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dbConfig": {
+          "$ref": "#/$defs/dbConfig"
+        }
+      }
+    },
+    "dbConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "engine": {
+          "type": "string",
+          "enum": ["postgres", "mysql", "dynamodb", "mongo"]
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dbTable"
+          }
+        }
+      }
+    },
+    "dbTable": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sizeClass": {
+          "type": "string",
+          "enum": ["S", "M", "L"]
+        },
+        "indexes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dbColumn"
+          }
+        }
+      }
+    },
+    "dbColumn": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "json"]
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
